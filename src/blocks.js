@@ -1,12 +1,47 @@
-/**
- * Gutenberg Blocks
- *
- * All blocks related JavaScript files should be imported here.
- * You can create a new block folder in this dir and include code
- * for that block here as well.
- *
- * All blocks should be included here since this is the file that
- * Webpack is compiling as the input file.
- */
+import { registerBlockType } from '@wordpress/blocks';
+import { PlainText } from '@wordpress/editor';
 
-import './block/block.js';
+let blockProperties = {
+	icon: 'editor-code',
+	category: 'formatting',
+
+	attributes: {
+		content: {
+			type: 'string',
+			source: 'text',
+			selector: 'pre',
+		},
+	},
+
+	supports: {
+		html: false,
+	},
+
+
+	edit( { attributes, setAttributes, className } ) {
+		return (
+			<div className={ className }>
+				<PlainText
+					value={ attributes.content }
+					onChange={ ( content ) => setAttributes( { content } ) }
+					placeholder={ 'Write code…' }
+				/>
+			</div>
+		);
+	},
+
+	save( { attributes } ) {
+		let el = document.createElement( 'div' );
+		el.appendChild( document.createTextNode( attributes.content ) );
+
+		return(
+			<pre>{ el.innerHTML }</pre>
+		)
+	},
+};
+
+blockProperties.title = 'Viper Test Block: Client';
+registerBlockType( 'viper007bond/test-block-client', blockProperties );
+
+blockProperties.title = 'Viper Test Block: Server';
+registerBlockType( 'viper007bond/test-block-server', blockProperties );
